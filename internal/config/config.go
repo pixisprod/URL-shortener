@@ -5,33 +5,30 @@ import (
 	"strconv"
 )
 
-type database struct {
-	User     string
-	Password string
-	Port     int
-	Host     string
-	Name     string
-	SslMode  string
+type app struct {
+	RetryInterval int
 }
 
 type Config struct {
-	Database database
+	Database *database
+	App      *app
+	Redis    *redis
+	Hash     *hash
 }
 
 func LoadConfig() *Config {
-	port, err := strconv.Atoi(os.Getenv("DB_PORT"))
+	retry_interval, err := strconv.Atoi(os.Getenv("APP_RETRY_INTERVAL"))
 	if err != nil {
-		port = 5432
+		retry_interval = 5
 	}
-	db_settings := database{
-		User:     os.Getenv("DB_USER"),
-		Password: os.Getenv("DB_PASSWORD"),
-		Port:     port,
-		Host:     os.Getenv("DB_HOST"),
-		Name:     os.Getenv("DB_NAME"),
-		SslMode:  os.Getenv("DB_SSLMODE"),
+	app_settings := app{
+		RetryInterval: retry_interval,
 	}
+
 	return &Config{
-		Database: db_settings,
+		Database: InitDatabaseConfig(),
+		App:      &app_settings,
+		Redis:    InitRedisConfig(),
+		Hash:     InitHashConfig(),
 	}
 }

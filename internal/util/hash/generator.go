@@ -10,6 +10,10 @@ type HashGenerator struct {
 	Length  int
 }
 
+func NewHashGenerator(chs string, l int) *HashGenerator {
+	return &HashGenerator{Charset: chs, Length: l}
+}
+
 func (h *HashGenerator) Generate() (string, error) {
 	b := make([]byte, h.Length)
 	_, err := rand.Read(b)
