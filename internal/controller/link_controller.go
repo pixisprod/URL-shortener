@@ -34,8 +34,9 @@ func (lc *LinkController) GenLink(c *gin.Context) {
 }
 
 func (lc *LinkController) Redirect(c *gin.Context) {
+	ctx := c.Request.Context()
 	hash := c.Param("hash")
-	url, err := lc.ls.GetLink(hash)
+	url, err := lc.ls.GetLink(ctx, hash)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"msg": "Hash not found"})
 		return
