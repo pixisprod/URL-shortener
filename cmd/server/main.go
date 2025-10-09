@@ -22,19 +22,21 @@ func main() {
 		cfg.Database.Port,
 		cfg.Database.Name,
 		cfg.Database.SslMode,
-		5,
+		cfg.App.RetryInterval,
 	)
 	if err != nil {
 		fmt.Println(err.Error())
 		return
 	}
-	rc := cache.NewRedisCacher(cache.InitRedisCacher("redis:6379", 5))
-	h := hash.HashGenerator{
-		Charset: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
-		Length:  5,
-	}
+	rc := cache.NewRedisCacher(
+		cache.InitRedisCacher(
+			fmt.Sprintf("%s:%d", cfg.Redis.Host, cfg.Redis.Port),
+			cfg.App.RetryInterval,
+		),
+	)
+	h := hash.NewHashGenerator(cfg.Hash.Charset, cfg.Hash.Length)
 	lr := repository.LinkRepository{Db: db}
-	ls := service.NewLinkService(&lr, &h, rc)
+	ls := service.NewLinkService(&lr, h, rc)
 
 	e := gin.Default()
 	route.RegisterRouters(e, ls)
