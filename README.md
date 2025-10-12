@@ -9,7 +9,7 @@ Runs fully in **Docker Compose** — no manual setup required.
 - **Go** — backend & REST API (Gin)
 - **PostgreSQL** — persistent storage
 - **Redis** — cache layer for short links
-- **migrate** — database migrations
+- **Migrate** — database migrations
 - **Docker Compose** — service orchestration
 
 ---
@@ -19,7 +19,7 @@ Runs fully in **Docker Compose** — no manual setup required.
 Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/url-shortener.git
+git clone https://github.com/pixisprod/URL-shortener.git
 cd url-shortener
 ```
 
