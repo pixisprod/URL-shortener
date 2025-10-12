@@ -2,10 +2,12 @@ package main
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/gin-gonic/gin"
 	"github.com/pixisprod/URL-shortener/internal/cache"
 	"github.com/pixisprod/URL-shortener/internal/config"
+	"github.com/pixisprod/URL-shortener/internal/controller"
 	"github.com/pixisprod/URL-shortener/internal/database"
 	"github.com/pixisprod/URL-shortener/internal/repository"
 	"github.com/pixisprod/URL-shortener/internal/route"
@@ -25,8 +27,7 @@ func main() {
 		cfg.App.RetryInterval,
 	)
 	if err != nil {
-		fmt.Println(err.Error())
-		return
+		log.Println(err.Error())
 	}
 	rc := cache.NewRedisCacher(
 		cache.InitRedisCacher(
@@ -35,10 +36,13 @@ func main() {
 		),
 	)
 	h := hash.NewHashGenerator(cfg.Hash.Charset, cfg.Hash.Length)
-	lr := repository.LinkRepository{Db: db}
-	ls := service.NewLinkService(&lr, h, rc)
+	lr := repository.NewLinkRepository(db)
+	ls := service.NewLinkService(lr, h, rc)
+	lc := controller.NewLinkController(ls)
 
-	e := gin.Default()
-	route.RegisterRouters(e, ls)
-	e.Run()
+	sc := controller.NewServiceController()
+
+	s := gin.Default()
+	route.RegisterRouters(s, lc, sc)
+	s.Run()
 }
