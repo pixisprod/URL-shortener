@@ -1,9 +1,12 @@
 package controller
 
 import (
+	"errors"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/pixisprod/URL-shortener/internal/domain"
 	"github.com/pixisprod/URL-shortener/internal/model"
 	"github.com/pixisprod/URL-shortener/internal/service"
 )
@@ -25,7 +28,8 @@ func (lc *LinkController) GenLink(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"msg": "Invalid request body"})
 		return
 	}
-	h, err := lc.ls.GenerateLink(s.Link)
+	ttl := time.Now().Add(time.Duration(s.TTL) * time.Second)
+	h, err := lc.ls.GenerateLink(s.Link, ttl)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"msg": "Error while generating hash"})
 		return
@@ -37,8 +41,14 @@ func (lc *LinkController) Redirect(c *gin.Context) {
 	ctx := c.Request.Context()
 	hash := c.Param("hash")
 	url, err := lc.ls.GetLink(ctx, hash)
-	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"msg": "Hash not found"})
+	if errors.Is(err, domain.ErrLinkNotFound) {
+		c.JSON(http.StatusNotFound, gin.H{"msg": err.Error()})
+		return
+	} else if errors.Is(err, domain.ErrLinkExpired) {
+		c.JSON(http.StatusGone, gin.H{"msg": err.Error()})
+		return
+	} else if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error"})
 		return
 	}
 	c.Redirect(http.StatusTemporaryRedirect, url)

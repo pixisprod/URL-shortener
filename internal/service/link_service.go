@@ -2,8 +2,13 @@ package service
 
 import (
 	"context"
+	"database/sql"
+	"errors"
+	"log"
+	"time"
 
 	"github.com/pixisprod/URL-shortener/internal/cache"
+	"github.com/pixisprod/URL-shortener/internal/domain"
 	"github.com/pixisprod/URL-shortener/internal/repository"
 	"github.com/pixisprod/URL-shortener/internal/util/hash"
 )
@@ -22,12 +27,17 @@ func NewLinkService(
 	return &LinkService{r: r, h: h, c: c}
 }
 
-func (ls *LinkService) GenerateLink(url string) (string, error) {
+func (ls *LinkService) GenerateLink(url string, ll time.Time) (string, error) {
 	h, err := ls.h.Generate()
 	if err != nil {
 		return "", err
 	}
-	err = ls.r.Add(h, url)
+	link := domain.Link{
+		Hash:      h,
+		URL:       url,
+		ExpiresAt: ll,
+	}
+	err = ls.r.Add(link)
 	if err != nil {
 		return "", err
 	}
@@ -35,16 +45,26 @@ func (ls *LinkService) GenerateLink(url string) (string, error) {
 }
 
 func (ls *LinkService) GetLink(ctx context.Context, hash string) (string, error) {
-	u, err := ls.c.Get(ctx, hash)
-	if err == nil && u != "" {
-		return u, nil
+	cachedURL, err := ls.c.Get(ctx, hash)
+	if err == nil && cachedURL != "" {
+		return cachedURL, nil
 	}
 
-	u, err = ls.r.GetByHash(hash)
-	if err != nil {
+	dl, err := ls.r.GetByHash(hash)
+	if errors.Is(err, sql.ErrNoRows) {
+		return "", domain.ErrLinkNotFound
+	} else if err != nil {
+		log.Println("Mystery error")
 		return "", err
 	}
-	_ = ls.c.Set(ctx, hash, u)
+	if time.Now().After(dl.ExpiresAt) {
+		return "", domain.ErrLinkExpired
+	}
 
-	return u, nil
+	ttl := int(time.Until(dl.ExpiresAt).Seconds())
+	if ttl > 0 {
+		_ = ls.c.Set(ctx, hash, dl.URL, ttl)
+	}
+
+	return dl.URL, nil
 }
