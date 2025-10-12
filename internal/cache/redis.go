@@ -23,8 +23,8 @@ func (c *RedisCacher) Get(ctx context.Context, k string) (string, error) {
 	return v, nil
 }
 
-func (c *RedisCacher) Set(ctx context.Context, k string, v string) error {
-	_, err := c.r.Set(ctx, k, v, time.Duration(15)*time.Minute).Result()
+func (c *RedisCacher) Set(ctx context.Context, k string, v string, ttl int) error {
+	_, err := c.r.Set(ctx, k, v, time.Duration(ttl)*time.Second).Result()
 	if err != nil {
 		return err
 	}
