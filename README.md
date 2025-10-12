@@ -70,13 +70,13 @@ http://localhost:8080
 ---
 
 ## 📋 To-Do
-- TTL for links
-- Metrics
-- Healthcheck
-- Rate limiting
-- Logging
-- Unit testing
-- Analytics
+- [x] TTL for links
+- [ ] Healthcheck
+- [ ] Metrics
+- [ ] Rate limiting
+- [ ] Logging
+- [ ] Unit testing
+- [ ] Analytics
 
 - Account system
 
