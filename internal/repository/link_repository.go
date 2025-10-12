@@ -9,6 +9,10 @@ type LinkRepository struct {
 	Db *sqlx.DB
 }
 
+func NewLinkRepository(db *sqlx.DB) *LinkRepository {
+	return &LinkRepository{Db: db}
+}
+
 func (lr *LinkRepository) Add(link domain.Link) error {
 	query := `
 		INSERT INTO links (hash, url, expires_at) 

@@ -71,7 +71,7 @@ http://localhost:8080
 
 ## 📋 To-Do
 - [x] TTL for links
-- [ ] Healthcheck
+- [x] Healthcheck
 - [ ] Metrics
 - [ ] Rate limiting
 - [ ] Logging
