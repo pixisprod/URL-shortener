@@ -3,12 +3,15 @@ package main
 import (
 	"fmt"
 	"log"
+	"log/slog"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/pixisprod/URL-shortener/internal/cache"
 	"github.com/pixisprod/URL-shortener/internal/config"
 	"github.com/pixisprod/URL-shortener/internal/controller"
 	"github.com/pixisprod/URL-shortener/internal/database"
+	"github.com/pixisprod/URL-shortener/internal/middleware"
 	"github.com/pixisprod/URL-shortener/internal/repository"
 	"github.com/pixisprod/URL-shortener/internal/route"
 	"github.com/pixisprod/URL-shortener/internal/service"
@@ -16,6 +19,11 @@ import (
 )
 
 func main() {
+	logger, err := setupLogger()
+	if err != nil {
+		log.Println(err.Error())
+	}
+	logger.Info("Server started!")
 	cfg := config.LoadConfig()
 	db, err := database.InitDbPool(
 		cfg.Database.User,
@@ -42,7 +50,19 @@ func main() {
 
 	sc := controller.NewServiceController()
 
+	lm := middleware.NewLoggingMiddleware(logger)
 	s := gin.Default()
-	route.RegisterRouters(s, lc, sc)
+	route.RegisterRouters(s, lc, sc, lm)
 	s.Run()
+}
+
+func setupLogger() (*slog.Logger, error) {
+	file, err := os.OpenFile("app.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	if err != nil {
+		return nil, err
+	}
+	h := slog.NewJSONHandler(file, &slog.HandlerOptions{
+		AddSource: true,
+	})
+	return slog.New(h), nil
 }
