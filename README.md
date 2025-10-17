@@ -65,7 +65,7 @@ http://localhost:8080
 ├── Dockerfile
 ├── docker-compose.yml
 └── go.mod
-```
+```ц=
 
 ---
 
@@ -74,7 +74,7 @@ http://localhost:8080
 - [x] Healthcheck
 - [ ] Metrics
 - [ ] Rate limiting
-- [ ] Logging
+- [x] Logging
 - [ ] Unit testing
 - [ ] Analytics
 
