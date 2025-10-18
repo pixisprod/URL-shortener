@@ -31,17 +31,18 @@ docker compose up --build
 
 The app will be available at:
 ```
-http://localhost:8080
+http://localhost:8000
 ```
 
 ---
 
 ## 📡 API Endpoints
 
-| Method | Endpoint             | Description            |
-|--------|----------------------|------------------------|
-| POST   | `/api/links/cut`     | Generate a short link  |
-| GET    | `/api/links/r/:hash` | Redirect to full URL   |
+| Method | Endpoint              | Description            |
+|--------|-----------------------|------------------------|
+| POST   | `/api/links/cut`      | Generate a short link  |
+| GET    | `/api/links/r/:hash`  | Redirect to full URL   |
+| GET    | `/api/service/health` | Check health           |
 
 ---
 
@@ -65,7 +66,7 @@ http://localhost:8080
 ├── Dockerfile
 ├── docker-compose.yml
 └── go.mod
-```ц=
+```
 
 ---
 
