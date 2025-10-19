@@ -6,9 +6,9 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/pixisprod/URL-shortener/internal/domain"
-	"github.com/pixisprod/URL-shortener/internal/model"
-	"github.com/pixisprod/URL-shortener/internal/service"
+	"github.com/pixisprod/url-shortener-link-service/internal/domain"
+	"github.com/pixisprod/url-shortener-link-service/internal/model"
+	"github.com/pixisprod/url-shortener-link-service/internal/service"
 )
 
 type LinkController struct {

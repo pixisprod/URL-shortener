@@ -7,10 +7,10 @@ import (
 	"log"
 	"time"
 
-	"github.com/pixisprod/URL-shortener/internal/cache"
-	"github.com/pixisprod/URL-shortener/internal/domain"
-	"github.com/pixisprod/URL-shortener/internal/repository"
-	"github.com/pixisprod/URL-shortener/internal/util/hash"
+	"github.com/pixisprod/url-shortener-link-service/internal/cache"
+	"github.com/pixisprod/url-shortener-link-service/internal/domain"
+	"github.com/pixisprod/url-shortener-link-service/internal/repository"
+	"github.com/pixisprod/url-shortener-link-service/internal/util/hash"
 )
 
 type LinkService struct {

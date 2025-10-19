@@ -19,12 +19,11 @@ services:
       - db
     restart: on-failure
 
-
-  app:
+  link_service:
     build:
-     context: .
+     context: ./link_service
      dockerfile: Dockerfile
-    container_name: app
+    container_name: link_service
     depends_on:
       - db
     ports:

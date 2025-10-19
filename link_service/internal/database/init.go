@@ -27,7 +27,7 @@ func InitDbPool(
 		name,
 		sslmode,
 	)
-	db, err := sqlx.Connect("postgres", dsn)
+	db, err := sqlx.Open("postgres", dsn)
 	if err != nil {
 		return nil, err
 	}
