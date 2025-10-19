@@ -2,7 +2,7 @@ package repository
 
 import (
 	"github.com/jmoiron/sqlx"
-	"github.com/pixisprod/URL-shortener/internal/domain"
+	"github.com/pixisprod/url-shortener-link-service/internal/domain"
 )
 
 type LinkRepository struct {

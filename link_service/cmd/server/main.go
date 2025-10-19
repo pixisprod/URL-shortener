@@ -7,15 +7,15 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
-	"github.com/pixisprod/URL-shortener/internal/cache"
-	"github.com/pixisprod/URL-shortener/internal/config"
-	"github.com/pixisprod/URL-shortener/internal/controller"
-	"github.com/pixisprod/URL-shortener/internal/database"
-	"github.com/pixisprod/URL-shortener/internal/middleware"
-	"github.com/pixisprod/URL-shortener/internal/repository"
-	"github.com/pixisprod/URL-shortener/internal/route"
-	"github.com/pixisprod/URL-shortener/internal/service"
-	"github.com/pixisprod/URL-shortener/internal/util/hash"
+	"github.com/pixisprod/url-shortener-link-service/internal/cache"
+	"github.com/pixisprod/url-shortener-link-service/internal/config"
+	"github.com/pixisprod/url-shortener-link-service/internal/controller"
+	"github.com/pixisprod/url-shortener-link-service/internal/database"
+	"github.com/pixisprod/url-shortener-link-service/internal/middleware"
+	"github.com/pixisprod/url-shortener-link-service/internal/repository"
+	"github.com/pixisprod/url-shortener-link-service/internal/route"
+	"github.com/pixisprod/url-shortener-link-service/internal/service"
+	"github.com/pixisprod/url-shortener-link-service/internal/util/hash"
 )
 
 func main() {
@@ -36,6 +36,7 @@ func main() {
 	)
 	if err != nil {
 		log.Println(err.Error())
+
 	}
 	rc := cache.NewRedisCacher(
 		cache.InitRedisCacher(

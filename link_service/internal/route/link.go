@@ -2,7 +2,7 @@ package route
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/pixisprod/URL-shortener/internal/controller"
+	"github.com/pixisprod/url-shortener-link-service/internal/controller"
 )
 
 func registerLinkRoutes(
